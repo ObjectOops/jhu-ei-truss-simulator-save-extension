@@ -6,6 +6,10 @@ let remoteForm = Object.assign(document.createElement("input"), {
     type: "text", 
     placeholder: "enter server address..."
 }); // Add to main menu.
+let remoteAuthForm = Object.assign(document.createElement("input"), {
+    type: "text", 
+    placeholder: "token (optional)..."
+})
 
 let statusIndicator = Object.assign(document.createElement("span"), {
     textContent: `save status: ${unsavedStatusText}`
@@ -29,6 +33,7 @@ let loadDataElem = document.getElementById("IDelemLoadTruss");
     loadSaveButton.innerHTML = internalButton("load from server");
 
     mainMenu.appendChild(remoteForm);
+    mainMenu.appendChild(remoteAuthForm);
     mainMenu.appendChild(loadSaveForm);
     mainMenu.appendChild(loadSaveButton);
 
@@ -41,11 +46,19 @@ function internalButton(label) {
     return `<a id="extensionUploadButton" onclick="extensionUpload();"><i style="font-size: 13px; margin-bottom: 0px">${label}</i>`;
 }
 
+function getRemoteStr() {
+    let queryAuth = `token=${remoteAuthForm.value}`;
+    if (remoteForm.value.endsWith("/")) {
+        return remoteForm + queryAuth;
+    }
+    return remoteForm.value + "/" + queryAuth;
+}
+
 function extensionUpload() {
     window.writeFile(); // Called from the simulator's `main.js`.
     let data = decodeURIComponent(saveDataElem.href.replace("data:text/json;charset=utf-8,", ""));
     
-    fetch(remoteForm.value, {
+    fetch(getRemoteStr(), {
         method: "POST", 
         headers: {
             "Content-Type": "application/json"
@@ -70,7 +83,7 @@ function extensionUpload() {
 }
 
 function extensionLoad() {
-    fetch(remoteForm.value, {
+    fetch(getRemoteStr(), {
         method: "GET"
     })
     .then(response => {
