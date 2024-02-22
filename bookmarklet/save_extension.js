@@ -27,6 +27,13 @@ let saveDataElem = document.getElementById("IDelemSaveTruss");
 let loadDataElem = document.getElementById("IDelemLoadTruss");
 
 (function() {
+    if (window.location.href != "https://ei.jhu.edu/truss-simulator/") {
+        verify = prompt("This page may not be the truss simulator. Continue Y/N?").toLowerCase();
+        if (verify == "n" || verify == "no") {
+            return;
+        }
+    }
+
     let mainMenu = document.getElementById("IDelemSaveSubmenu"); // Menu under [Import & Export].
     let saveMenu = document.getElementById("IDelemSaveAs"); // Menu under [Save as file].
 
