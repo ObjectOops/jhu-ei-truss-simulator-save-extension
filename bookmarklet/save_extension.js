@@ -10,6 +10,14 @@ let remoteAuthForm = Object.assign(document.createElement("input"), {
     type: "text", 
     placeholder: "token (optional)..."
 });
+let remoteUploadEndpointForm = Object.assign(document.createElement("input"), {
+    type: "text", 
+    placeholder: "upload endpoint (optional)..."
+});
+let remoteLoadEndpointForm = Object.assign(document.createElement("input"), {
+    type: "text", 
+    placeholder: "load endpoint (optional)..."
+});
 
 let statusIndicator = Object.assign(document.createElement("span"), {
     textContent: `save status: ${unsavedStatusText}`
@@ -34,6 +42,8 @@ let loadDataElem = document.getElementById("IDelemLoadTruss");
 
     mainMenu.appendChild(remoteUrlForm);
     mainMenu.appendChild(remoteAuthForm);
+    mainMenu.appendChild(remoteUploadEndpointForm);
+    mainMenu.appendChild(remoteLoadEndpointForm);
     mainMenu.appendChild(loadSaveForm);
     mainMenu.appendChild(loadSaveButton);
 
@@ -46,8 +56,8 @@ function internalButton(label) {
     return `<a onclick="${extensionUpload.name}();"><i style="font-size: 13px; margin-bottom: 0px">${label}</i>`;
 }
 
-function getRemoteStr() {
-    let queryAuth = `token=${remoteAuthForm.value}`;
+function getRemoteStr(endpoint) {
+    let queryAuth = `${endpoint}?token=${remoteAuthForm.value}`;
     if (remoteUrlForm.value.endsWith("/")) {
         return remoteUrlForm.value + queryAuth;
     }
@@ -59,7 +69,7 @@ function extensionUpload() {
     let data = decodeURIComponent(saveDataElem.href.replace("data:text/json;charset=utf-8,", ""));
     statusIndicator.textContent = "saving...";
 
-    fetch(getRemoteStr(), {
+    fetch(getRemoteStr(remoteUploadEndpointForm.value), {
         method: "POST", 
         headers: {
             "Content-Type": "application/json"
@@ -84,7 +94,7 @@ function extensionUpload() {
 }
 
 function extensionLoad() {
-    fetch(getRemoteStr(), {
+    fetch(getRemoteStr(remoteLoadEndpointForm.value), {
         method: "GET"
     })
     .then(response => {
