@@ -2,18 +2,18 @@ const savedStatusText = "saved";
 const unsavedStatusText = "unsaved";
 const noneStatusText = "-";
 
-let remoteForm = Object.assign(document.createElement("input"), {
+let remoteUrlForm = Object.assign(document.createElement("input"), {
     type: "text", 
     placeholder: "enter server address..."
 }); // Add to main menu.
 let remoteAuthForm = Object.assign(document.createElement("input"), {
     type: "text", 
     placeholder: "token (optional)..."
-})
+});
 
 let statusIndicator = Object.assign(document.createElement("span"), {
     textContent: `save status: ${unsavedStatusText}`
-})
+});
 
 let saveDataElem = document.getElementById("IDelemSaveTruss");
 let loadDataElem = document.getElementById("IDelemLoadTruss");
@@ -32,7 +32,7 @@ let loadDataElem = document.getElementById("IDelemLoadTruss");
     let loadSaveButton = document.createElement("button"); // Add to main menu.
     loadSaveButton.innerHTML = internalButton("load from server");
 
-    mainMenu.appendChild(remoteForm);
+    mainMenu.appendChild(remoteUrlForm);
     mainMenu.appendChild(remoteAuthForm);
     mainMenu.appendChild(loadSaveForm);
     mainMenu.appendChild(loadSaveButton);
@@ -43,21 +43,22 @@ let loadDataElem = document.getElementById("IDelemLoadTruss");
 })();
 
 function internalButton(label) {
-    return `<a id="extensionUploadButton" onclick="extensionUpload();"><i style="font-size: 13px; margin-bottom: 0px">${label}</i>`;
+    return `<a onclick="${extensionUpload.name}();"><i style="font-size: 13px; margin-bottom: 0px">${label}</i>`;
 }
 
 function getRemoteStr() {
     let queryAuth = `token=${remoteAuthForm.value}`;
-    if (remoteForm.value.endsWith("/")) {
-        return remoteForm + queryAuth;
+    if (remoteUrlForm.value.endsWith("/")) {
+        return remoteUrlForm.value + queryAuth;
     }
-    return remoteForm.value + "/" + queryAuth;
+    return remoteUrlForm.value + "/" + queryAuth;
 }
 
 function extensionUpload() {
     window.writeFile(); // Called from the simulator's `main.js`.
     let data = decodeURIComponent(saveDataElem.href.replace("data:text/json;charset=utf-8,", ""));
-    
+    statusIndicator.textContent = "saving...";
+
     fetch(getRemoteStr(), {
         method: "POST", 
         headers: {
@@ -96,7 +97,7 @@ function extensionLoad() {
         loadDataElem.files = [data];
         window.readFile(); // Called from the simulator's `main.js`.
 
-        statusIndicator.textContent = `save status: LOADED ${savedStatusText}`;
+        statusIndicator.textContent = `save status: LOADED ${unsavedStatusText}`;
     })
     .catch((error) => {
         statusIndicator.textContent = `load status: ERROR ${error}`;
