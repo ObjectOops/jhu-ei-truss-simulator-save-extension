@@ -24,6 +24,7 @@ let statusIndicator = Object.assign(document.createElement("span"), {
 });
 
 let saveDataElem = document.getElementById("IDelemSaveTruss");
+let saveDataNameForm = document.getElementById("IDelemFileName");
 let loadDataElem = document.getElementById("IDelemLoadTruss");
 
 (function() {
@@ -63,12 +64,10 @@ function internalButton(label) {
     return `<a onclick="${extensionUpload.name}();"><i style="font-size: 13px; margin-bottom: 0px">${label}</i>`;
 }
 
-function getRemoteStr(endpoint) {
-    let queryAuth = `${endpoint}?token=${remoteAuthForm.value}`;
-    if (remoteUrlForm.value.endsWith("/")) {
-        return remoteUrlForm.value + queryAuth;
-    }
-    return remoteUrlForm.value + "/" + queryAuth;
+function getRemoteStr(endpoint, name) {
+    let baseUrl = remoteUrlForm.value + (remoteUrlForm.value.endsWith("/") ? "" : "/");
+    let query = `${encodeURIComponent(endpoint)}?token=${encodeURIComponent(remoteAuthForm.value)}&name=${encodeURIComponent(name)}`
+    return encodeURI(baseUrl + query);
 }
 
 function extensionUpload() {
@@ -76,7 +75,7 @@ function extensionUpload() {
     let data = decodeURIComponent(saveDataElem.href.replace("data:text/json;charset=utf-8,", ""));
     statusIndicator.textContent = "saving...";
 
-    fetch(getRemoteStr(remoteUploadEndpointForm.value), {
+    fetch(getRemoteStr(remoteUploadEndpointForm.value, saveDataNameForm.value.length == 0 ? "truss" : saveDataNameForm.value), {
         method: "POST", 
         headers: {
             "Content-Type": "application/json"
@@ -85,7 +84,7 @@ function extensionUpload() {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error("Bad request.");
+            throw new Error(`code ${response.status}`);
         }
     })
     .then(() => {
@@ -101,12 +100,14 @@ function extensionUpload() {
 }
 
 function extensionLoad() {
-    fetch(getRemoteStr(remoteLoadEndpointForm.value), {
-        method: "GET"
+    trussName = prompt("Truss Name");
+    fetch(getRemoteStr(remoteLoadEndpointForm.value, saveDataNameForm.value), {
+        method: "GET", 
+        body: trussName
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error("Bad request.");
+            throw new Error(`code ${response.status}`);
         }
         return response.blob();
     })
