@@ -1,4 +1,5 @@
-from flask import Flask
+import flask
+import flask_cors
 
 import hashlib
 import yaml
@@ -12,8 +13,10 @@ with open('config.yml', 'r') as fin:
         exit(1)
 
 key = config['key']
+auto_push = config['auto_push']
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
+flask_cors.CORS(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
@@ -22,30 +25,38 @@ def main():
         name = flask.request.args['name']
         data = flask.request.get_data(as_text=True)
 
-        if hashlib.sha256(token) != key:
+        if not test_auth(token, key):
             return {}, 401
 
-        with open(name + '.json', 'w+') as fout:
+        with open('./saves/' + name + '.json', 'w+') as fout:
             try:
                 fout.write(data)
             except:
                 return {}, 500
         
-        os.system('git add .')
+        os.system('git add saves')
         os.system('git commit -m \"Automated commit.\"')
-        os.system('git push')
+        if auto_push:
+            os.system('git push')
+        # print("Committing thing now.")
     elif flask.request.method == 'GET':
-        token = request.args['token']
-        name = request.args['name']
+        token = flask.request.args['token']
+        name = flask.request.args['name']
 
-        if hashlib.sha256(token) != key:
+        if not test_auth(token, key):
             return {}, 401
         
-        with open(name + '.json', 'r') as fin:
+        with open('./saves/' + name + '.json', 'r') as fin:
             try:
                 return fin.read()
             except:
                 return {}, 500
+    return {}, 200
+
+def test_auth(token, expected):
+    if hashlib.sha256(token.encode('utf-8')).hexdigest() != hashlib.sha256(expected.encode('utf-8')).hexdigest():
+        return False
+    return True
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
