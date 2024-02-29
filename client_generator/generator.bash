@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # Polyglot madness.
 
@@ -8,7 +9,7 @@ wget -P "ei.jhu.edu/cdn-cgi/scripts/7d0fa10a/cloudflare-static" "https://ei.jhu.
 
 # Note: Take care to only use double quotes inside the embedded script, or escape single quotes with '\''.
 
-python <(echo '
+python3 <(echo '
 
 fin = open("ei.jhu.edu/truss-simulator/index.html", "r")
 raw_content = fin.read()
