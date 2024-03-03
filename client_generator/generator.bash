@@ -8,6 +8,7 @@ wget -P "ei.jhu.edu/cdn-cgi/scripts/5c5dd728/cloudflare-static" "https://ei.jhu.
 wget -P "ei.jhu.edu/cdn-cgi/scripts/7d0fa10a/cloudflare-static" "https://ei.jhu.edu/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
 
 # Note: Take care to only use double quotes inside the embedded script, or escape single quotes with '\''.
+# Probably could have also the -c cmd option.
 
 python3 <(echo '
 
