@@ -13,6 +13,7 @@ with open('config.yml', 'r') as fin:
         exit(1)
 
 key = config['key']
+auto_commit = config['auto_commit']
 auto_push = config['auto_push']
 
 app = flask.Flask(__name__)
@@ -34,8 +35,9 @@ def main():
             except:
                 return {}, 500
         
-        os.system('git add saves')
-        os.system('git commit -m \"Automated commit.\"')
+        if auto_push or auto_commit:
+            os.system('git add saves')
+            os.system('git commit -m \"Automated commit.\"')
         if auto_push:
             os.system('git push')
         # print("Committing thing now.")

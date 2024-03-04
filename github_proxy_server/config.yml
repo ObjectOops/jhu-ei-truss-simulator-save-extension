@@ -1,2 +1,5 @@
+# Setting auto_push to true will also enable auto_commit.
+
 key: ""
+auto_commit: false
 auto_push: false

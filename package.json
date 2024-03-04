@@ -1,0 +1,14 @@
+{
+  "name": "jhu-ei-truss-simulator-save-extension",
+  "version": "1.0.0",
+  "description": "A bookmarklet to extend the truss simulator from JHU Engineering Innovation to send truss saves to a server.",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.42.1",
+    "@types/node": "^20.11.25"
+  }
+}
