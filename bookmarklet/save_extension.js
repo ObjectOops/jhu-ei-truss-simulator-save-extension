@@ -29,7 +29,7 @@ let loadDataElem = document.getElementById("IDelemLoadTruss");
 
 (function() {
     if (window.location.href !== "https://ei.jhu.edu/truss-simulator/") {
-        verify = prompt("This page may not be the truss simulator. Continue Y/N?").toLowerCase();
+        let verify = prompt("This page may not be the truss simulator. Continue Y/N?").toLowerCase();
         if (verify === "n" || verify === "no") {
             return;
         }
@@ -73,7 +73,7 @@ function internalButton(label, func) {
 
 function getRemoteStr(endpoint, name) {
     let baseUrl = remoteUrlForm.value + (remoteUrlForm.value.endsWith("/") ? "" : "/");
-    let query = `${encodeURIComponent(endpoint)}?token=${encodeURIComponent(remoteAuthForm.value)}&name=${encodeURIComponent(name)}`
+    let query = `${encodeURIComponent(endpoint)}?token=${encodeURIComponent(remoteAuthForm.value)}&name=${encodeURIComponent(name)}`;
     return encodeURI(baseUrl + query);
 }
 
