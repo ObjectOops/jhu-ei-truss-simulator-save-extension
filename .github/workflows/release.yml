@@ -1,0 +1,36 @@
+# Reference: https://github.com/actions/create-release
+# Note: Deprecation may incur technical debt in the future.
+
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - name: Build
+        run: |
+          TEMPLATE_NAME="release_template.md"
+          cd bookmarklet
+          printf '```\n' >> ../.github/$TEMPLATE_NAME
+          node condense.js >> ../.github/$TEMPLATE_NAME
+          printf '\n```' >> ../.github/$TEMPLATE_NAME
+          cat ../.github/$TEMPLATE_NAME
+      - name: Publish
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body_path: ".github/release_template.md"
+          draft: false
+          prerelease: false

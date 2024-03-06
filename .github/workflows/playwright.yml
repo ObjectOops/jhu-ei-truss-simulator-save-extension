@@ -1,0 +1,47 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ main, staging ]
+  pull_request:
+    branches: [ main, staging ]
+  schedule:
+    # Runs on the eleventh day of every month at 11:11 AM UTC.
+    - cron:  '11 11 11 * *'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install npm Dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Install Python Dependencies
+      run: pip install -r requirements.txt
+    - name: Generate Local Client
+      run: cd client_generator && ./generator.bash
+    # Important Notes:
+    # For some reason, the server is terminated between steps while using nektos/act, so it's all together here.
+    # For another reason, Webkit throws an error as described here: https://github.com/microsoft/playwright/issues/27313
+    # during its test, which is resolved by removing the offending package.
+    - name: Start Server and Run Playwright Tests
+      run: |
+        cd github_proxy_server && python3 server.py &
+        ps all
+        while ! timeout 1 bash -c "echo > /dev/tcp/localhost/5000"; do sleep 1; done
+        apt-get remove -y libsoup2.4
+        npx playwright test
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
