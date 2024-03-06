@@ -37,7 +37,7 @@ jobs:
         cd github_proxy_server && python3 server.py &
         ps all
         while ! timeout 1 bash -c "echo > /dev/tcp/localhost/5000"; do sleep 1; done
-        apt-get remove -y libsoup2.4
+        sudo apt-get remove -y libsoup2.4
         npx playwright test
     - uses: actions/upload-artifact@v4
       if: always()
