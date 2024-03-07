@@ -1,3 +1,5 @@
+![Playwright Tests](https://github.com/ObjectOops/jhu-ei-truss-simulator-save-extension/workflows/Playwright%20Tests/badge.svg)
+
 # jhu-ei-truss-simulator-save-extension
 A bookmarklet to extend the [truss simulator](https://ei.jhu.edu/truss-simulator/) from JHU Engineering Innovation to send truss saves to a server.  
 This project is not affiliated with Johns Hopkins University or the original creator of the truss simulator in any way.
