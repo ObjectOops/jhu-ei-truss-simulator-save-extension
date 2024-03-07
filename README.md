@@ -15,11 +15,9 @@ Start the sample backend.
 ```sh
 cd github_proxy_server && python3 server.py
 ```
-{% warning %}
 
-**Warning:** The server only has basic authentication and has not been tested for security. Be careful when exposing it publicly.
+> **Warning:** The server only has basic authentication and has not been tested for security. Be careful when exposing it publicly.
 
-{% endwarning %}
 #### Enabling Version Control (git)
 To enable version control, initialize a new repository inside `github_proxy_server`.  
 Optionally, enable `auto_commit` in the server's configuration file to automatically commit each save.
