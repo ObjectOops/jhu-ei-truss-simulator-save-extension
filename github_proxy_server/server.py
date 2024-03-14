@@ -27,7 +27,7 @@ def main():
         data = flask.request.get_data(as_text=True)
 
         if not test_auth(token, key):
-            return {}, 401
+            return {}, 403
 
         with open('./saves/' + name + '.json', 'w+') as fout:
             try:
@@ -46,7 +46,7 @@ def main():
         name = flask.request.args['name']
 
         if not test_auth(token, key):
-            return {}, 401
+            return {}, 403
         
         with open('./saves/' + name + '.json', 'r') as fin:
             try:
@@ -56,9 +56,7 @@ def main():
     return {}, 200
 
 def test_auth(token, expected):
-    if hashlib.sha256(token.encode('utf-8')).hexdigest() != hashlib.sha256(expected.encode('utf-8')).hexdigest():
-        return False
-    return True
+    return hashlib.sha256(token.encode('utf-8')).hexdigest() == hashlib.sha256(expected.encode('utf-8')).hexdigest()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
