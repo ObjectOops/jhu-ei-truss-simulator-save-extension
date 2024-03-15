@@ -29,11 +29,11 @@ def main():
         if not test_auth(token, key):
             return {}, 403
 
-        with open('./saves/' + name + '.json', 'w+') as fout:
-            try:
+        try:
+            with open('./saves/' + name + '.json', 'w+') as fout:
                 fout.write(data)
-            except:
-                return {}, 500
+        except FileNotFoundError:
+            return {}, 500
         
         if auto_push or auto_commit:
             os.system('git add saves')
@@ -48,11 +48,11 @@ def main():
         if not test_auth(token, key):
             return {}, 403
         
-        with open('./saves/' + name + '.json', 'r') as fin:
-            try:
+        try:
+            with open('./saves/' + name + '.json', 'r') as fin:
                 return fin.read()
-            except:
-                return {}, 500
+        except FileNotFoundError:
+            return {}, 500
     return {}, 200
 
 def test_auth(token, expected):
