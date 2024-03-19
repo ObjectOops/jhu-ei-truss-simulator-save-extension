@@ -2,6 +2,12 @@ const savedStatusText = "saved";
 const unsavedStatusText = "unsaved";
 const noneStatusText = "-";
 
+const errorCodeLookup = {
+    "404": "Could not locate file. Try checking the server address or file name.", 
+    "403": "Access denied. Try checking the token.", 
+    "500": "Internal server error. See server logs."
+};
+
 let remoteUrlForm = Object.assign(document.createElement("input"), {
     type: "text", 
     placeholder: "enter server address..."
@@ -91,14 +97,14 @@ function extensionUpload() {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error(`code ${response.status}`);
+            throw new Error(errorMsg(response.status));
         }
     })
     .then(() => {
         statusIndicator.textContent = `save status: ${savedStatusText}`
     })
     .catch((error) => {
-        statusIndicator.textContent = `save status: ERROR ${error}`;
+        statusIndicator.textContent = `save status: ${error}`;
     });
 
     setTimeout(() => {
@@ -113,7 +119,7 @@ function extensionLoad() {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error(`code ${response.status}`);
+            throw new Error(errorMsg(response.status));
         }
         return response.blob();
     })
@@ -128,6 +134,14 @@ function extensionLoad() {
         statusIndicator.textContent = `save status: LOADED ${unsavedStatusText}`;
     })
     .catch((error) => {
-        statusIndicator.textContent = `load status: ERROR ${error}`;
+        statusIndicator.textContent = `load status: ${error}`;
     });
+}
+
+function errorMsg(status) {
+    let code = `${status}`;
+    if (errorCodeLookup.hasOwnProperty(code)) {
+        var msg = errorCodeLookup[code];
+    }
+    return `code ${code} ${msg !== undefined ? msg : ""}`;
 }

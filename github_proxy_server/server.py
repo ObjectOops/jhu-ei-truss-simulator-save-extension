@@ -32,7 +32,7 @@ def main():
         try:
             with open('./saves/' + name + '.json', 'w+') as fout:
                 fout.write(data)
-        except FileNotFoundError:
+        except:
             return {}, 500
         
         if auto_push or auto_commit:
@@ -52,7 +52,7 @@ def main():
             with open('./saves/' + name + '.json', 'r') as fin:
                 return fin.read()
         except FileNotFoundError:
-            return {}, 500
+            return {}, 404
     return {}, 200
 
 def test_auth(token, expected):
