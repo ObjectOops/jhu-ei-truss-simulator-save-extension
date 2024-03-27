@@ -8,6 +8,8 @@ const errorCodeLookup = {
     "500": "Internal server error. See server logs."
 };
 
+const no_content_length = 230;
+
 let remoteUrlForm = Object.assign(document.createElement("input"), {
     type: "text", 
     placeholder: "enter server address..."
@@ -71,6 +73,17 @@ let loadDataElem = document.getElementById("IDelemLoadTruss");
     mainMenu.appendChild(loadSaveButton);
 
     saveMenu.appendChild(uploadSaveButton);
+
+    window.addEventListener("beforeunload", (e) => {
+        window.writeFile(); // Called from the simulator's `main.js`.
+        let recent_save_data = decodeURIComponent(saveDataElem.href.replace("data:text/json;charset=utf-8,", ""));
+    
+        if (recent_save_data.length !== no_content_length && recent_save_data !== globalThis.save_data) {
+            e.preventDefault();
+            return "Unsaved changes. Confirm exit?";
+        }
+        return "";
+    });
 })();
 
 function internalButton(label, func) {
@@ -85,7 +98,7 @@ function getRemoteStr(endpoint, name) {
 
 function extensionUpload() {
     window.writeFile(); // Called from the simulator's `main.js`.
-    let data = decodeURIComponent(saveDataElem.href.replace("data:text/json;charset=utf-8,", ""));
+    globalThis.save_data = decodeURIComponent(saveDataElem.href.replace("data:text/json;charset=utf-8,", ""));
     statusIndicator.textContent = "saving...";
 
     fetch(getRemoteStr(remoteUploadEndpointForm.value, saveDataNameForm.value.length === 0 ? "truss" : saveDataNameForm.value), {
@@ -93,7 +106,7 @@ function extensionUpload() {
         headers: {
             "Content-Type": "application/json"
         }, 
-        body: data
+        body: globalThis.save_data
     })
     .then(response => {
         if (!response.ok) {
