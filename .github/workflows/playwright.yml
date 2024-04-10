@@ -28,6 +28,8 @@ jobs:
       run: pip install -r requirements.txt
     - name: Generate Local Client
       run: cd client_generator && ./generator.bash
+    - name: Condense
+      run: cd bookmarklet && node condense.js > ../tests/bookmarklet.txt
     # Important Notes:
     # For some reason, the server is terminated between steps while using nektos/act, so it's all together here.
     # For another reason, Webkit throws an error as described here: https://github.com/microsoft/playwright/issues/27313
