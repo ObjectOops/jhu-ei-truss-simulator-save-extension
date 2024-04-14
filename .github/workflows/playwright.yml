@@ -27,7 +27,7 @@ jobs:
     - name: Install Python Dependencies
       run: pip install -r requirements.txt
     - name: Generate Local Client
-      run: cd client_generator && ./generator.bash
+      run: cd client_generator && ./generator.sh
     - name: Condense
       run: cd bookmarklet && node condense.js > ../tests/bookmarklet.txt
     # Important Notes:

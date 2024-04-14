@@ -38,9 +38,9 @@ auto_push: true # This will also enable auto_commit.
 ### Bookmarklet
 Follow the instructions on the [releases](https://github.com/ObjectOops/jhu-ei-truss-simulator-save-extension/releases) page on GitHub.
 ### Offline Client
-Download a local copy of the [truss simulator](https://ei.jhu.edu/truss-simulator/) and augment it with the extension. This requires a shell that supports process substitution, but can be modified to work with `sh`.
+Download a local copy of the [truss simulator](https://ei.jhu.edu/truss-simulator/) and augment it with the extension.
 ```bash
-cd client_generator && ./generator.bash
+cd client_generator && ./generator.sh
 ```
 Open `client_generator/ei.jhu.edu/truss-simulator/index.html` in a web browser and proceed past the confirmation prompt.
 
