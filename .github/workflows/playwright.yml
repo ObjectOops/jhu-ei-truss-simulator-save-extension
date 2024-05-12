@@ -46,6 +46,7 @@ jobs:
         npx playwright test
     - name: Start Server and Run Playwright Tests with Poetry
       run: |
+        killall python3
         cd github_proxy_server && poetry run python3 server.py &
         ps all
         while ! timeout 1 bash -c "echo > /dev/tcp/localhost/5000"; do sleep 1; done
