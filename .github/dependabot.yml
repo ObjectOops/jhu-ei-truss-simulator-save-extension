@@ -8,17 +8,21 @@ version: 2
 updates:
  - package-ecosystem: "devcontainers"
    directory: "/"
+   target-branch: "staging"
    schedule:
-     interval: weekly
+     interval: monthly
  - package-ecosystem: "github-actions"
    directory: "/"
+   target-branch: "staging"
    schedule:
-     interval: weekly
+     interval: monthly
  - package-ecosystem: "npm"
    directory: "/"
+   target-branch: "staging"
    schedule:
-     interval: weekly
+     interval: monthly
  - package-ecosystem: "pip"
    directory: "/"
+   target-branch: "staging"
    schedule:
-     interval: weekly
+     interval: monthly
