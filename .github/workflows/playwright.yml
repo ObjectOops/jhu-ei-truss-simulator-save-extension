@@ -51,7 +51,15 @@ jobs:
         ps all
         while ! timeout 1 bash -c "echo > /dev/tcp/localhost/5000"; do sleep 1; done
         npx playwright test
-    - uses: actions/upload-artifact@v4
+    - name: Upload Temporary Cache
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: site-cache
+        path: client_generator/ei.jhu.edu/
+        retention-days: 60
+    - name: Upload Playwright Report
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: playwright-report
