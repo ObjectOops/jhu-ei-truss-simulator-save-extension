@@ -1,5 +1,6 @@
 # Setting auto_push to true will also enable auto_commit.
 
-key: ""
+# Default to empty key.
+key_sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 auto_commit: false
 auto_push: false

@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 30
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
@@ -25,7 +25,10 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Install Python Dependencies
-      run: pip install -r requirements.txt
+      run: |
+        pip install -r requirements.txt
+        pip install poetry
+        poetry install
     - name: Generate Local Client
       run: cd client_generator && ./generator.sh
     - name: Condense
@@ -36,12 +39,28 @@ jobs:
     # during its test, which is resolved by removing the offending package.
     - name: Start Server and Run Playwright Tests
       run: |
-        cd github_proxy_server && python3 server.py &
-        ps all
+        cd github_proxy_server
+        python3 server.py &
+        TESTING_SERVER_PID="$!"
+        cd ..
         while ! timeout 1 bash -c "echo > /dev/tcp/localhost/5000"; do sleep 1; done
         sudo apt-get remove -y libsoup2.4
         npx playwright test
-    - uses: actions/upload-artifact@v4
+        kill $TESTING_SERVER_PID
+    - name: Start Server and Run Playwright Tests with Poetry
+      run: |
+        cd github_proxy_server && poetry run python3 server.py &
+        while ! timeout 1 bash -c "echo > /dev/tcp/localhost/5000"; do sleep 1; done
+        npx playwright test
+    - name: Upload Temporary Cache
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: site-cache
+        path: client_generator/ei.jhu.edu/
+        retention-days: 60
+    - name: Upload Playwright Report
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: playwright-report

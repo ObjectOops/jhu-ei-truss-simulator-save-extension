@@ -11,7 +11,11 @@ This project is not affiliated with Johns Hopkins University or the original cre
 ### Sample Backend
 Add an authentication key to the server's configuration in `config.yml`.
 ```yml
-key: "" # Insert your authenication key here.
+key_sha256: "" # Insert your SHA256 authentication key hash here.
+```
+```bash
+# Tip: 
+printf "<your key here>" | sha256sum
 ```
 Start the sample backend.
 ```sh
