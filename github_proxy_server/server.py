@@ -12,7 +12,7 @@ with open('config.yml', 'r') as fin:
         print('There is a typo in `config.yml`.')
         exit(1)
 
-key = config['key']
+key = config['key_sha256']
 auto_commit = config['auto_commit']
 auto_push = config['auto_push']
 
@@ -56,7 +56,7 @@ def main():
     return {}, 200
 
 def test_auth(token, expected):
-    return hashlib.sha256(token.encode('utf-8')).hexdigest() == hashlib.sha256(expected.encode('utf-8')).hexdigest()
+    return hashlib.sha256(token.encode('utf-8')).hexdigest() == expected
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
