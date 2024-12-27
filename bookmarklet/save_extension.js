@@ -92,7 +92,7 @@ function internalButton(label, func) {
 
 function getRemoteStr(endpoint, name) {
     let baseUrl = remoteUrlForm.value + (remoteUrlForm.value.endsWith("/") ? "" : "/");
-    let query = `${encodeURIComponent(endpoint)}?token=${encodeURIComponent(remoteAuthForm.value)}&name=${encodeURIComponent(name)}`;
+    let query = `${encodeURIComponent(endpoint)}?name=${encodeURIComponent(name)}`;
     return encodeURI(baseUrl + query);
 }
 
@@ -104,7 +104,8 @@ function extensionUpload() {
     fetch(getRemoteStr(remoteUploadEndpointForm.value, saveDataNameForm.value.length === 0 ? "truss" : saveDataNameForm.value), {
         method: "POST", 
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json", 
+            "Authorization": `Bearer ${encodeURIComponent(remoteAuthForm.value)}`
         }, 
         body: globalThis.save_data
     })
@@ -128,7 +129,10 @@ function extensionUpload() {
 function extensionLoad() {
     trussName = prompt("Truss Name");
     fetch(getRemoteStr(remoteLoadEndpointForm.value, trussName), {
-        method: "GET"
+        method: "GET", 
+        headers: {
+            "Authorization": `Bearer ${encodeURIComponent(remoteAuthForm.value)}`
+        }
     })
     .then(response => {
         if (!response.ok) {

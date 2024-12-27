@@ -22,8 +22,8 @@ flask_cors.CORS(app)
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if flask.request.method == 'POST':
-        token = flask.request.args['token']
         name = flask.request.args['name']
+        token = flask.request.headers.get('Authorization')[7:] # Skip "Bearer".
         data = flask.request.get_data(as_text=True)
 
         if not test_auth(token, key):
@@ -42,8 +42,8 @@ def main():
             os.system('git push')
         # print("Committing thing now.")
     elif flask.request.method == 'GET':
-        token = flask.request.args['token']
         name = flask.request.args['name']
+        token = flask.request.headers.get('Authorization')[7:] # Skip "Bearer".
 
         if not test_auth(token, key):
             return {}, 403
