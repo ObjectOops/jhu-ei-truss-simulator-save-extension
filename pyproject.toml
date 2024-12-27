@@ -6,10 +6,10 @@ authors = ["Your Name <you@example.com>"]
 package-mode = false
 
 [tool.poetry.dependencies]
-python = ">=3.10.0,<3.12"
-flask = "^3.0.3"
-flask-cors = "^4.0.1"
-pyyaml = "^6.0.1"
+python = ">=3.12"
+flask = "^3.1.0"
+flask-cors = "^4.0.2"
+pyyaml = "^6.0.2"
 
 [tool.pyright]
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md
