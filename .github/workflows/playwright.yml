@@ -39,8 +39,10 @@ jobs:
     # during its test, which is resolved by removing the offending package.
     - name: Start Server and Run Playwright Tests
       run: |
-        cd github_proxy_server && python3 server.py &
+        cd github_proxy_server
+        python3 server.py &
         TESTING_SERVER_PID="$!"
+        cd ..
         while ! timeout 1 bash -c "echo > /dev/tcp/localhost/5000"; do sleep 1; done
         sudo apt-get remove -y libsoup2.4
         npx playwright test
