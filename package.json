@@ -9,7 +9,7 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.49.1",
-    "@types/node": "^20.17.10"
+    "@types/node": "^22.13.0"
   },
   "dependencies": {
     "@minify-js/node": "^0.6.0"
