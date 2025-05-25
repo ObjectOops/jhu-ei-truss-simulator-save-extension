@@ -5,9 +5,9 @@ on:
     branches: [ main, staging ]
   pull_request:
     branches: [ main, staging ]
-  schedule:
-    # Runs on the eleventh day of every month at 11:11 AM UTC.
-    - cron:  '11 11 11 * *'
+  # schedule:
+  #   # Runs on the eleventh day of every month at 11:11 AM UTC.
+  #   - cron:  '11 11 11 * *'
 
 jobs:
   test:
